@@ -11,13 +11,6 @@ use serde_json::Value;
 use tokio::task;
 use crate::process;
 
-fn check_request<A: AsRef<OsStr> + Display>(args: Vec<A>) -> String {
-    args.iter()
-        .map(|arg| format!("arg[]={}", arg))
-        .collect::<Vec<String>>()
-        .join("&")
-}
-
 async fn fetch_package_info<A: AsRef<OsStr> + Display>(packages: Vec<A>) -> (Vec<String>, Vec<String>) {
     let client = Client::new();
     let mut aur_packages = vec![];
@@ -75,6 +68,8 @@ pub async fn install
     args: Vec<A>
 )
 {
+    aura_install().await;
+
     let (aur_packages, non_aur_packages) = fetch_package_info(args).await;
 
     if !aur_packages.is_empty() {
@@ -118,6 +113,7 @@ pub async fn install
     }
 }
 
+#[allow(dead_code)]
 fn answer_yes_no(question: &str) -> bool {
     loop {
         print!("{} (Yes/No): ", question);
@@ -138,6 +134,7 @@ fn answer_yes_no(question: &str) -> bool {
     }
 }
 
+#[allow(dead_code)]
 async fn run_command<C: AsRef<OsStr>>(cmd: C, args: Vec<&str>) -> bool {
     let mut cmd = Command::new(cmd);
 
