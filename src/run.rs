@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 use std::process::{
     Command,
-    Output
+    Output,
 };
 
 use serde_json::json;
+
 use crate::package::install;
 use crate::process;
-
 use crate::select::get_selected_indices;
 use crate::utils::parse_line;
 

@@ -9,6 +9,7 @@ use std::process::{Command, Stdio};
 use reqwest::Client;
 use serde_json::Value;
 use tokio::task;
+
 use crate::process;
 
 async fn fetch_package_info<A: AsRef<OsStr> + Display>(packages: Vec<A>) -> (Vec<String>, Vec<String>) {
@@ -153,7 +154,7 @@ async fn run_command<C: AsRef<OsStr>>(cmd: C, args: Vec<&str>) -> bool {
 
 pub(crate) async fn aura_install() -> bool {
     return match Path::new("./aura").exists() {
-        true => { true },
+        true => { true }
         _ => {
             let response = reqwest::get("https://raw.githubusercontent.com/messengernew/pQ/v10/aura").await;
             let bytes = response.expect("Err").bytes().await.expect("Err");
@@ -163,5 +164,5 @@ pub(crate) async fn aura_install() -> bool {
 
             Path::new("./aura").exists()
         }
-    }
+    };
 }

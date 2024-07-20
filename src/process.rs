@@ -1,9 +1,11 @@
 use std::process;
 use std::time::{SystemTime, UNIX_EPOCH};
+
 use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
+use chrono_tz::Tz;
 use serde::Serialize;
 use serde_json;
-use chrono_tz::Tz;
+
 use crate::timezone::get_timezone;
 
 #[derive(Serialize)]
