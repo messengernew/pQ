@@ -2,9 +2,10 @@ use std::collections::HashSet;
 use std::io::{self, Write};
 
 pub async fn get_selected_indices(len: usize) -> HashSet<usize> {
-    let sel = "Select packages";
+    let sel = "Packages to install";
     let err_buf = "Failed to clear buffer";
     let err_line = "Failed to read the line";
+
     match len {
         1 => {
             let mut selected_indices = HashSet::new();
@@ -12,7 +13,7 @@ pub async fn get_selected_indices(len: usize) -> HashSet<usize> {
             selected_indices
         }
         2 => {
-            print!("{sel} (1 2/1,2): ");
+            print!("{sel} (e.g., 1 2/1,2): ");
             io::stdout().flush().expect(err_buf);
 
             let mut input = String::new();
@@ -30,7 +31,7 @@ pub async fn get_selected_indices(len: usize) -> HashSet<usize> {
             selected_indices
         }
         _ => {
-            print!("{sel} (1 2/1,2, 1-2): ");
+            print!("{sel} (e.g., 1 2 3, 1-3): ");
             io::stdout().flush().expect(err_buf);
 
             let mut input = String::new();

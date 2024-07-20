@@ -1,14 +1,15 @@
-use crate::select::get_selected_indices;
-use crate::utils::{parse_line};
-use serde_json::json;
 use std::collections::HashMap;
 use std::process::{
     Command,
-    exit as proc_exit,
     Output
 };
-use crate::paru::install;
+
+use serde_json::json;
+use crate::package::install;
 use crate::process;
+
+use crate::select::get_selected_indices;
+use crate::utils::parse_line;
 
 #[derive(Debug)]
 struct Item {
@@ -48,7 +49,10 @@ pub async fn app() {
         }
     }
 
-    if items.is_empty() { process::exit(2).msg("Updates not found") }
+    if items.is_empty() {
+        process::exit(2).msg("Updates not found");
+    }
+
     println!("Update List:");
     for (i, item) in items.iter().enumerate() {
         println!("{}. {} | {} -> {}", i + 1, item.name, item.old_version, item.new_version);
@@ -60,12 +64,9 @@ pub async fn app() {
         .filter(|(key, _)| selected_indices.contains(key))
         .collect();
 
-    let _json_result = json!(filtered_result);
+    let packages: Vec<String> = filtered_result.values()
+        .map(|v| v["name"].as_str().unwrap().to_string())
+        .collect();
 
-    let names_string = filtered_result.values()
-        .map(|item| item["name"].as_str().unwrap())
-        .collect::<Vec<_>>()
-        .join(" ");
-
-    proc_exit(install(&names_string).await);
+    install(packages).await;
 }
