@@ -16,5 +16,34 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set up Rust
+      uses: actions/setup-rust@v2
+      with:
+        rust-version: 1.79.0
+
     - name: Build
       run: cargo build --verbose --release
+
+    - name: Create Release
+      id: create_release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const { data: release } = await github.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: `v${process.env.GITHUB_RUN_NUMBER}`,
+            name: `Release v${process.env.GITHUB_RUN_NUMBER}`,
+            draft: false,
+            prerelease: false
+          });
+          return release.data.html_url;
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v2
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/release/pQ
+        asset_name: pq
+        asset_content_type: application/octet-stream
