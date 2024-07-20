@@ -25,17 +25,8 @@ jobs:
     - name: Build
       run: cargo build --verbose --release
 
-    - name: Install GitHub CLI
-      run: sudo apt-get install gh
-
-    - name: Authenticate with GitHub CLI
-      run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
-
-    - name: Create Release
-      id: create_release
-      run: gh release create "v${{ github.run_number }}" ./target/release/pQ --title "Release v${{ github.run_number }}" --notes "Release v${{ github.run_number }}"
-
-    - name: Upload Release Asset
-      run: gh release upload "v${{ github.run_number }}" ./target/release/pQ --clobber
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: ./target/release/pQ
