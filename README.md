@@ -13,8 +13,8 @@ A command-line application for updating AUR packages and system packages on Arch
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/messenger_qs/pq.git
-   cd pq
+   mkdir pQ && cd pQ && \
+   curl https://raw.githubusercontent.com/messengernew/pQ/master/PKGBUILD -o PKGBUILD
    ```
 
 2. **Build the Application:**
@@ -22,7 +22,7 @@ A command-line application for updating AUR packages and system packages on Arch
    Ensure you have Rust installed. Build the project using Cargo:
 
    ```bash
-   makepkg -si
+   makepkg -sic
    ```
 
 3. **Run the Application:**
