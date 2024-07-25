@@ -84,11 +84,15 @@ pub async fn install
             Ok(status) if status.success() => (),
             Ok(status) => {
                 let fail = format!("Failed to install AUR packages with status: {}", status);
-                process::exit(1).msg(&fail);
+                process::exit(1)
+                    .delete("./aura")
+                    .msg(&fail);
             }
             Err(e) => {
                 let err = format!("Error installing AUR packages: {}", e);
-                process::exit(2).msg(&err);
+                process::exit(2)
+                    .delete("./aura")
+                    .msg(&err);
             }
         }
     }
@@ -104,11 +108,15 @@ pub async fn install
             Ok(status) if status.success() => (),
             Ok(status) => {
                 let fail = format!("Failed to process non-AUR packages with status: {}", status);
-                process::exit(1).msg(&fail);
+                process::exit(1)
+                    .delete("./aura")
+                    .msg(&fail);
             }
             Err(e) => {
                 let err = format!("Error processing non-AUR packages: {}", e);
-                process::exit(2).msg(&err)
+                process::exit(2)
+                    .delete("./aura")
+                    .msg(&err);
             }
         }
     }

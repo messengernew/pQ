@@ -1,4 +1,4 @@
-use std::process;
+use std::{fs, process};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
@@ -40,17 +40,34 @@ fn format_time(seconds: u64) -> String {
     }
 }
 
-pub struct ExitWrapper(i32);
+#[allow(non_camel_case_types)]
+pub struct ExitWrapper {
+    code: i32,
+    delete_file: Option<String>,
+}
 
+#[allow(dead_code)]
 impl ExitWrapper {
     pub(crate) fn msg(self, message: &str) {
-        let exit_info = ExitInfo::new(message, self.0);
+        let exit_info = ExitInfo::new(message, self.code);
         let json_output = serde_json::to_string_pretty(&exit_info).unwrap();
+
+        if let Some(file_path) = self.delete_file {
+            if let Err(e) = fs::remove_file(&file_path) {
+                eprintln!("Failed to delete file {}: {}", file_path, e);
+            }
+        }
+
         println!("ExitInfo {}", json_output);
-        process::exit(self.0);
+        process::exit(self.code);
+    }
+
+    pub(crate) fn delete<F: ToString>(mut self, file_path: F) -> Self {
+        self.delete_file = Some(file_path.to_string());
+        self
     }
 }
 
 pub(crate) fn exit(code: i32) -> ExitWrapper {
-    ExitWrapper(code)
+    ExitWrapper { code, delete_file: None }
 }

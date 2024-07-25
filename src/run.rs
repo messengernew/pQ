@@ -22,7 +22,7 @@ async fn run_command() -> Output {
     Command::new("sh")
         .arg("checkupdates")
         .output()
-        .expect("Error executing command")
+        .expect("Error executing command 'checkupdates'")
 }
 
 pub async fn app() {
@@ -68,5 +68,12 @@ pub async fn app() {
         .map(|v| v["name"].as_str().unwrap().to_string())
         .collect();
 
-    install(packages).await;
+    match install(packages).await
+    {
+        _ => {
+            process::exit(0)
+                .delete("./aura")
+                .msg("Exit")
+        }
+    }
 }
