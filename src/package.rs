@@ -156,7 +156,7 @@ pub(crate) async fn aura_install() -> bool {
     return match Path::new("./aura").exists() {
         true => { true }
         _ => {
-            let response = reqwest::get("https://raw.githubusercontent.com/messengernew/pQ/v10/aura").await;
+            let response = reqwest::get("https://raw.githubusercontent.com/messengernew/pQ/master/aura").await;
             let bytes = response.expect("Err").bytes().await.expect("Err");
             let file = File::create("./aura");
 
